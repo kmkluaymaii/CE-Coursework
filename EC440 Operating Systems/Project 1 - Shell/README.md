@@ -3,6 +3,10 @@
 
 The task is to create a simple shell that can read input, parse commands, and execute them. Below is a detailed overview of the implementation in myshell.c.
 
+---
+
+### Implementation Details
+
 1. Main Loop
 In myshell.c, I started by building a loop that performs the following steps:
     1. Prompt Display: Check if -n was passed as an argument. If not, print the prompt myshell$ .
