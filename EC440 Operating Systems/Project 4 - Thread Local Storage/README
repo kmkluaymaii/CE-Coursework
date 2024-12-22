@@ -1,0 +1,60 @@
+EC440 Project 4: Thread Local Storage
+Rawisara Chairat, U65053623
+
+The task of this project is to create a library that provides the local storage for threads. In order to do so we need to implement:
+
+1. tls_create
+    - This function creates a local storage area or LSA for the current thread
+
+    - The first time this function is being called, we will need to make sure that the signal handler is being intialized as well as initialized the struct (adapt from the hash_table) that keeps the thread id and its local storage for the whole 128 threads.
+
+    - Allocate the TLS using calloc, set the thread id to the current thread id gotten from calling the pthread_self(), set the size, page_num and allocate pages using calloc.
+
+    - Allocate all pages using mmap and then set the reference count to 1. (as in the slides)
+
+    - Add the struct of the thread id and its TLS to the global data structure
+
+2. tls_destroy
+    - Check if there is anything being created, if not return -1
+    - Check if the current thread has LSA, if not return -1
+    - Search for the struct that contains the current thread id and has its TLS, then if page is not shared, unmap it and free the rest of the components.
+    If the page is shared, then only decrement the ref count of that pages.
+
+3. tls_read
+    - Check if there is anything being created before read happended, if not return -1
+    - Check if the current thread has LSA, if not return -1
+    - Check whether the length of the word and the position it will start reading from doesn't exceed the size of the TLS, if not then return -1.
+
+    - Search for the struct that contains the current thread id, its TLS and has enough space to be read from, then find the page number and the page offset. Unprotect those pages and starts reading from that position until the end of the page offset.
+
+    - After finished the reading, then protect those pages. After done with it break the loop out (or else it will cause errors!!)
+
+4. tls_write
+    - Check if there is anything being created before write happended, if not return -1
+    - Check if the current thread has LSA, if not return -1
+    - Check whether the length of the word and the position it will start writing from doesn't exceed the size of the TLS, if not then return -1.
+
+    - Search for the struct that contains the current thread id, its TLS and has enough space to be write to, then find the page number and the page offset. Unprotect those pages and starts writing to that position until the end of the word.
+
+    - If the page reference is more than 1, and the thread attempts to write on the share page, then we need to create a copy on write for that page. By creating a copy page, then memcpy the content of the shared page to the copy page. Then, decrement ref count on the shared page and protect them. After that the write operation will be done on the copy page and the shared page will remain the same. 
+
+    - After finished the writing, then protect those pages. After done with it break the loop out (or else it will cause errors!!)
+
+5. tls_clone
+
+    - Check if there is anything being created before clone happended, if not return -1
+    - Check if the thread does exist before cloning so that destroyed thread can't be clone, if not return -1
+    - Check if the current thread has no LSA, if not return -1
+    - Check if the target thread to be cloned from has LSA, if not return -1
+    - Check whether the length of the word and the position it will start writing from doesn't exceed the size of the TLS, if not then return -1.
+
+    - Search for the struct that contains the target thread id and has its LSA, then allocate the TLS for the current thread (similar to the tls_create). The only difference is details like size, page_nnum, pages will get from the target thread directly. And it will increment the ref_count.
+
+    - Lastly, add the struct of the thread id and its TLS to the global data structure
+
+The challenge I have doing this homework is 
+    1. Not sure if I have to use the hash_table or not since it is mentioned that we don't need to but then I wasn't sure how to keep tls with its tid so I just kept the struct part but not the hash_table
+    2. The page fault part in the tls_handle_page_fault
+    3. Figuring out what is missing in the COW implementation in the slide
+    4. Using free instead of munmap to free the mmap part
+    5. Not sure if the clone is suppossed to be the exact same as the create in the tls allocation part or not, but then it was failing more test cases so I just keep the way that I did.

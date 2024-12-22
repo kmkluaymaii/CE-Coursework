@@ -1,0 +1,41 @@
+EC440 Project 3: Thread Synchronization
+Rawisara Chairat, U65053623
+
+This project is building up on to the previous project by adding semaphore to deal with the synchronization of the threads.
+
+The functions of this project are:
+    1. Semaphore (sem_init(), sem_wait(), sem_post() and sem_destroy())
+    2. Threads Operations from previous project (pthread.create(), pthread.exit(), pthread.self(), schedule(), alarm_handler())
+    3. New thread operation (pthread.join())
+    4. Lock and Unlock (lock(), unlock())
+
+For sem_init(), it would
+    1. Find an unused semaphore by finiding a semaphore with flag = 0, once found then change flag to 1.
+    2. Initialize the queue, count and value.
+
+In sem_wait(),
+    1. Decrements the value of the semaphore.
+    2. If the semaphore's value is less than 0 then the calling thread would be blocked until the semaphore is increased by other thread.
+    3. The calling thread then be added to the queue and then increment the queue as well as sem_count, counting the blocked thread.
+    4. The calling thread will be blocked, then it would call schedule to tell the next ready thread to run.
+
+For sem_post(), 
+    1. It is after the sem is done so it increments the value by 1.
+    2. It checks if there are threads waiting (sem_count > 0). If so, and if the semaphore value is still non-positive, 
+    it moves the first thread in the queue to the READY state so it can run when next scheduled.
+
+For sem_destroy(),
+    1. It would just set the flag to 0.
+
+In pthread_join(),
+    1. It waits for thread to exit while scheduling other thread.
+    2. If value_ptr is provided, stores the exit value of the thread into the location pointed to by value_ptr.
+    3. Frees the memory allocated for the thread's stack after it has exited.
+
+For lock() and unlock(),
+    1. Clears any signals from siglock.
+    2. Adds SIGALRM to siglock.
+    3. Blocks/Unblocks SIGALRM from being delivered to the current thread.
+
+My code is not passing the last test case, though I understand what producer/consumer is, 
+I still can't figure out what to change to accommodate that.
