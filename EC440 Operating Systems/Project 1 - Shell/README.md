@@ -5,7 +5,7 @@ The task is to create a simple shell that can read input, parse commands, and ex
 
 ### Implementation Details
 
-### 1. **Main Loop**
+#### 1. **Main Loop**
 The main loop in `myshell.c` performs these steps:
 1. **Prompt Display**:
    - If `-n` is not passed as an argument, print the prompt `myshell$`.
@@ -20,7 +20,7 @@ The main loop in `myshell.c` performs these steps:
 
 ---
 
-### 2. **Command Parsing**
+#### 2. **Command Parsing**
 The `parse_command` function splits input into individual commands:
 1. **Tokenization**:
    - Use `strtok` to split the input string by the pipe character `|`.
@@ -31,7 +31,7 @@ The `parse_command` function splits input into individual commands:
 
 ---
 
-### 3. **delete_space Function**
+#### 3. **delete_space Function**
 The `delete_space` function removes unnecessary spaces:
 1. **Leading Space Removal**:
    - Increment the pointer to skip leading spaces.
@@ -46,7 +46,7 @@ The `delete_space` function removes unnecessary spaces:
 
 ---
 
-### 4. **Command Execution**
+#### 4. **Command Execution**
 The `execute_command` function executes the first command:
 1. **Argument Tokenization**:
    - Use `strtok` to split the command into arguments.
