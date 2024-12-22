@@ -1,7 +1,9 @@
-## Project 1 - Shell
+## Project 1: Shell
 
 
 The task is to create a simple shell that can read input, parse commands, and execute them. Below is a detailed overview of the implementation in myshell.c.
+
+---
 
 ### Implementation Details
 
