@@ -1,5 +1,4 @@
-EC440 Homework 2: Preemptive User Mode Threading Library
-Rawisara Chairat, U65053623
+## Project 2: Preemptive User Mode Threading Library
 
 The functions of this code to:
     1. Create a thread (pthread.create())
