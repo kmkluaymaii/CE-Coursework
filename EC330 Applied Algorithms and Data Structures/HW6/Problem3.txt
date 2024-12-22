@@ -1,0 +1,18 @@
+Name & Collaborator Name: Rawisara Chairat
+BU ID Used for Problem3: U65053623
+
+main.cpp output:
+The length of the longest word in the file is: 1065
+The number of valid passwords in the file is: 921
+Number of valid dictionary words that don't contain your Halloween candies
+abbreviations: 573316
+
+Explanation:
+a). This function open file, reads each word, and keeps track of the maximum word length found.
+b). This function open file, reads each character, check if it is either a lowercase, an uppercase, or a digit,
+and then concatenate into the password. If the next character is a space, then it would check whether the password is valid.
+If it does, then increment the password counter.
+c). This function open the dictionary file, reach each line and loads the words that contain fewer than 3 of the characters 
+'s', 'p', and 'k' (lowercase and uppercase) into a Trie. Then it reads each word from the file, create substrings, 
+and check if each substring exists in the Dictionary Trie. If a substring is found in the Trie, it increments a counter.
+If substring is found in a file and it is in the leaf, then it would break to generate the substring of the next character.

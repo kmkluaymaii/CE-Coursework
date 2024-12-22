@@ -1,0 +1,32 @@
+Name: Rawisara Chairat
+BU ID: U65053623
+
+Description of the Algorithm and its runtime:
+
+The program in Problem5.cpp uses a dynamic programming algorithn to 
+find the maximum common subsequence. 
+
+1. findMaxSubSeqLen function:
+    - This functions start with finding the length of both strings.
+    - If one of the string is blank, then return 0 immediately.
+    - Starts with initializing dp of size (len_A + 1) * (len_B + 1) with all zeros.
+    - Create a for loop through all the elements in the dp. 
+        - If the character matches, then dp[i][j] will equal to dp[i-1][j-1] + 1, 
+          which means that the length is increased by one.
+        - Otherwise, check the letter before for both words to see if there is a match 
+          and then keep the max value.
+    - Return the last element in the dp since that would be the max length.
+    
+    Runtime: Θ(length of stringA * length of stringB) since it only has to go through all the element 
+    in the dp which is the length of the first string multiply with the length of the second string.
+
+2. findMaxSubSeq function:
+    - This functions start with finding the length of both strings.
+    - If one of the string is blank, then return blank subsequence immediately.
+    - Use the same method to create the dp like in the previous function.
+    - Loop through the last row of the dp to find the location where the value in dp changes.
+    - Then concatenate the subsequence with the character from that location from stringB.
+    - Lastly, return the longest subsequence.
+
+    Runtime:  Θ(length of stringA * length of stringB) since it is the same as the previous function.
+    The only thing added is the loop through the last row of dp which is negligible compared to the length of stringA * length of stringB.
