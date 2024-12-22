@@ -1,28 +1,54 @@
 ## Project 2: Preemptive User Mode Threading Library
 
-The functions of this code to:
-    1. Create a thread (pthread.create())
-    2. Exit a thread once it's done (pthread.exit())
-    3. Schedule the next ready thread every 50 second (schedule() & alarm_handler())
-    4. Return the id of the current thread (pthread_self())
+This project implements a user-mode threading library that supports preemptive multitasking with the following functionalities:
+- **Thread Creation**: `pthread_create()`
+- **Thread Exit**: `pthread_exit()`
+- **Preemptive Scheduling**: `schedule()` and `alarm_handler()`
+- **Thread ID Retrieval**: `pthread_self()`
 
-In pthread.create(), 
-    1. If this is the first time pthread.create() is being called then create a thread control block for main and also starts the alarm_handler and set the status to RUNNING.
-    2. Continue creating a thread by creating a new thread control block for each thread, including create a new id, create a new stack,  and set the status to READY. In the top of the stack store the pthread_exit.
-    3. Setjmp the context of the current thread.
+---
 
-In pthread_exit()
-    1. If the current running thread finishes running and the pthread_exit got called, this function would set the status to EXITED, deallocates the stack, decrement the thread counter and triggers the scheduler to switch to the next thread.
+### Functional Overview
 
-In pthread_self(),
-    1. Returns the ID of the currently running thread.
+#### 1. **Thread Creation (`pthread_create`)**
+The `pthread_create()` function manages thread initialization:
+1. **First Invocation**:
+   - Creates a thread control block (TCB) for the `main` thread.
+   - Starts the `alarm_handler` to enable preemptive scheduling.
+   - Sets the `main` thread's status to `RUNNING`.
+2. **Subsequent Calls**:
+   - Allocates a TCB for the new thread.
+   - Generates a unique thread ID.
+   - Allocates a new stack for the thread and sets the status to `READY`.
+   - Stores the `pthread_exit()` function at the top of the stack.
+   - Captures the current thread's context using `setjmp()`.
 
-In schedule()
-    1. If something is running, set it to being ready.
-    2. If there is only main left, then continues running main until it ends.
-    3. If the thread has been called longjmp before then the function returns immediately, allowing the resumed thread to continue execution from where it was previously suspended.
-    4. Find the next ready thread and then set its status to be RUNNING.
-    5. Longjmp to the next thread.
+---
 
-In alarm_handler()
-    1. Sets up the SIGALRM signal to trigger preemptive scheduling every 50ms.
+#### 2. **Thread Exit (`pthread_exit`)**
+The `pthread_exit()` function handles thread termination:
+1. Sets the current thread's status to `EXITED`.
+2. Deallocates the thread's stack and decrements the thread counter.
+3. Invokes the scheduler to switch to the next ready thread.
+
+---
+
+#### 3. **Thread ID Retrieval (`pthread_self`)**
+The `pthread_self()` function:
+- Returns the ID of the currently running thread.
+
+---
+
+#### 4. **Scheduling (`schedule`)**
+The `schedule()` function orchestrates thread switching:
+1. Sets the status of the currently running thread to `READY`.
+2. If only the `main` thread remains, continues running it until termination.
+3. Uses `longjmp()` to resume a previously suspended thread.
+4. Identifies the next `READY` thread, updates its status to `RUNNING`, and switches to it using `longjmp()`.
+
+---
+
+#### 5. **Preemptive Scheduling (`alarm_handler`)**
+The `alarm_handler()` function:
+1. Configures the `SIGALRM` signal to trigger every 50 milliseconds.
+2. Initiates the `schedule()` function to switch threads preemptively.
