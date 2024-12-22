@@ -61,4 +61,3 @@ The `execute_command` function executes the first command:
 6. **Result Display**:
    - Print the result after execution.
 
----
